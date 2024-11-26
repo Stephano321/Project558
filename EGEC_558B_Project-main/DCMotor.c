@@ -5,12 +5,25 @@
 
 void DC_Motor_Init(void)
 {
-    //Port D Initialization
+    //Port D Initialization Motors 1 and 2 (Front 2 wheels)
     SYSCTL_RCGCGPIO_R |= 0x08;       // Enable Port D
     GPIO_PORTD_DIR_R |= 0x0C;   // Set PD2 and PD3 as output
     GPIO_PORTD_DEN_R |= 0x0C;   // Enable Digital for PD2 and PD3
     GPIO_PORTD_DIR_R |= 0xC0;   // Set PD6 and PD7 as output
     GPIO_PORTD_DEN_R |= 0xC0;   // Enable Digital for PD6 and PD7
+
+    //Port C Initialization Motor 3 (Back left Wheel)
+    SYSCTL_RCGCGPIO_R |= 0x04;
+    GPIO_PORTC_DIR_R |= 0xC0;   // Set PC6 and PC7 as output
+    GPIO_PORTC_DEN_R |= 0xC0;   // Enable Digital for PC6 and PC7
+
+
+    //Port E Initialization Motor 4 (Back Right Wheel)
+    SYSCTL_RCGCGPIO_R |= 0x10;
+    GPIO_PORTE_DIR_R |= 0x30;   // Set PE4 and PE5 as output
+    GPIO_PORTE_DEN_R |= 0x30;   // Enable Digital for PE4 and PE5
+
+    //Port F Initialization for PWM
 
     /*//PWM Initialization
     SYSCTL_RCGC0_R |= SYSCTL_RCGC0_PWM0;
@@ -41,57 +54,97 @@ void DC_Motor_Init(void)
 
 void Forward(void)
 {
-    // Left Motor(Forward)
+    // Top Left Motor(Forward)
     GPIO_PORTD_DATA_R |= 0x04;   // Set PD2 high
     GPIO_PORTD_DATA_R &= ~0x08;  // Set PD3 low
 
-    // Right Motor(Forward)
+    // Top Right Motor(Forward)
     GPIO_PORTD_DATA_R |= 0x40;   // Set PD6 high
     GPIO_PORTD_DATA_R &= ~0x80;  // Set PD7 low
+
+    // Bottom Left Motor(Forward)
+    GPIO_PORTC_DATA_R |= 0x40;   // Set PC6 high
+    GPIO_PORTC_DATA_R &= ~0x80;  // Set PC7 low
+
+    // Bottom Right Motor(Forward)
+    GPIO_PORTE_DATA_R |= 0x10;   // Set PE4 high
+    GPIO_PORTE_DATA_R &= ~0x20;  // Set PE5 low
 }
 
 void Reverse(void)
 {
-    // Left Motor(Backwards)
-    GPIO_PORTD_DATA_R |= ~0x04;  // Set PD2 low
-    GPIO_PORTD_DATA_R &= 0x08;   // Set PD3 high
+    // Top Left Motor(Backwards)
+    GPIO_PORTD_DATA_R &= ~0x04;  // Set PD2 low
+    GPIO_PORTD_DATA_R |= 0x08;   // Set PD3 high
 
-    // Right Motor(Backwards)
-    GPIO_PORTD_DATA_R |= ~0x40;  // Set PD6 low
-    GPIO_PORTD_DATA_R &= 0x80;   // Set PD7 high
+    // Top Right Motor(Backwards)
+    GPIO_PORTD_DATA_R &= ~0x40;  // Set PD6 low
+    GPIO_PORTD_DATA_R |= 0x80;   // Set PD7 high
+
+    // Bottom Left Motor(Backwards)
+    GPIO_PORTC_DATA_R &= ~0x40;   // Set PC6 low
+    GPIO_PORTC_DATA_R |= 0x80;  // Set PC7 high
+
+    // Bottom Right Motor(Backwards)
+    GPIO_PORTE_DATA_R &= ~0x10;   // Set PE4 low
+    GPIO_PORTE_DATA_R |= 0x20;  // Set PE5 high
 }
 
 void Turn_Left(void)
 {
-    // Left Motor (Backwards)
+    // Top Left Motor (Backwards)
     GPIO_PORTD_DATA_R |= ~0x04;  // Set PD2 low
     GPIO_PORTD_DATA_R &= 0x08;   // Set PD3 high
 
-    // Right Motor (Forward)
+    // Top Right Motor (Forward)
     GPIO_PORTD_DATA_R |= 0x40;   // Set PD6 high
     GPIO_PORTD_DATA_R &= ~0x80;  // Set PD7 low
+
+    // Bottom Left Motor(Backwards)
+    GPIO_PORTC_DATA_R &= ~0x40;   // Set PC6 low
+    GPIO_PORTC_DATA_R |= 0x80;  // Set PC7 high
+
+    // Bottom Right Motor(Forward)
+    GPIO_PORTE_DATA_R |= 0x10;   // Set PE4 high
+    GPIO_PORTE_DATA_R &= ~0x20;  // Set PE5 low
 }
 
 void Turn_Right(void)
 {
-    // Left Motor (Forward)
+    // Top Left Motor (Forward)
     GPIO_PORTD_DATA_R |= 0x04;   // Set PD2 high
     GPIO_PORTD_DATA_R &= ~0x08;  // Set PD3 low
 
-    // Right Motor (Backwards)
+    // Top Right Motor (Backwards)
     GPIO_PORTD_DATA_R |= ~0x40;  // Set PD6 low
     GPIO_PORTD_DATA_R &= 0x80;   // Set PD7 high
+
+    // Bottom Left Motor(Forward)
+    GPIO_PORTC_DATA_R |= 0x40;   // Set PC6 high
+    GPIO_PORTC_DATA_R &= ~0x80;  // Set PC7 low
+
+    // Bottom Right Motor(Backwards)
+    GPIO_PORTE_DATA_R &= ~0x10;   // Set PE4 low
+    GPIO_PORTE_DATA_R |= 0x20;  // Set PE5 high
 }
 
 void Stop(void)
 {
-    // Left Motor (Stop)
-    GPIO_PORTD_DATA_R |= ~0x04;   // Set PD2 low
+    // Top Left Motor (Stop)
+    GPIO_PORTD_DATA_R &= ~0x04;   // Set PD2 low
     GPIO_PORTD_DATA_R &= ~0x08;  // Set PD3 low
 
-    // Right Motor (Stop)
-    GPIO_PORTD_DATA_R |= ~0x40;  // Set PD6 low
+    // Top Right Motor (Stop)
+    GPIO_PORTD_DATA_R &= ~0x40;  // Set PD6 low
     GPIO_PORTD_DATA_R &= ~0x80;   // Set PD7 low
+
+    // Bottom Left Motor(Stop)
+    GPIO_PORTC_DATA_R &= ~0x40;   // Set PC6 low
+    GPIO_PORTC_DATA_R &= ~0x80;  // Set PC7 low
+
+    // Bottom Right Motor(Backwards)
+    GPIO_PORTE_DATA_R &= ~0x10;   // Set PE4 low
+    GPIO_PORTE_DATA_R &= ~0x20;  // Set PE5 low
 }
 
 
