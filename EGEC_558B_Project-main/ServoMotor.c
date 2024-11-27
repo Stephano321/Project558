@@ -9,24 +9,57 @@ void Servo_Motor_Init(void)
     SYSCTL_RCGCGPIO_R |= 0x04;    //Enable Port C
     GPIO_PORTC_DIR_R |= 0x10;    //Set PC4 as output
     GPIO_PORTC_DEN_R |= 0x10;    //Enable Digital for PC4
+
+    //PWM Init
+    GPIO_PORTC_AFSEL_R |= 0x10;
+    GPIO_PORTC_PCTL_R |= 0x00040000;
+
+    //Disable PWM Generator 3
+    PWM0_ENABLE_R &= ~0x40;
+    PWM0_CTL_R &= ~0x08;
+
+    //Down Count
+    PWM0_3_CTL_R &= ~0x03;
+    PWM0_3_GENA_R = 0x8C;
+    PWM0_3_GENB_R = 0;
+
+    //Set PWM load Register for 20ms Period
+    PWM0_3_LOAD_R = 5000 - 1;
+
+    //Set Default Comparator Value for the middle position
+    PWM0_3_CMPA_R = (5000 - 350) - 1;
+    PWM0_CTL_R |= 0x08;
+    PWM0_3_CTL_R |= 0x01;
+
+    //Enable M0PWMB output
+    PWM0_ENABLE_R |= 0x40;
 }
 
-//20ms PWM Signal
+
 void leftPosition(void)
 {
-    int i = 0;
+    PWM0_3_CMPA_R = (5000 - 552) - 1;
+    // Theoretical Value for other Servo
+    //PWM0_3_CMPA_R = (5000-434) - 1;
+
+    /*int i = 0;
     for(i = 0; i < 100; i++)
     {
     GPIO_PORTC_DATA_R |= 0x10;
     Timer1_Delay_MicroSecond(1735);
     GPIO_PORTC_DATA_R &= ~0x10;
     Timer1_Delay_MicroSecond(18265); //Finish Period of 20ms
-    }
+    }*/
 }
 
 
 void middlePosition(void)
 {
+    PWM0_3_CMPA_R = (5000-350) - 1;
+    // Theoretical Value for other Servo
+    //PWM0_3_CMPA_R = (5000-231) - 1;
+
+    /*
     int i = 0;
     for(i = 0; i < 100; i++)
     {
@@ -35,11 +68,17 @@ void middlePosition(void)
     GPIO_PORTC_DATA_R &= ~0x10;
     Timer1_Delay_MicroSecond(19075); //Finish Period of 20ms
     }
+    */
 }
 
 
 void rightPosition(void)
 {
+    PWM0_3_CMPA_R = (5000 - 147) - 1;
+    // Theoretical Value for other Servo
+    //PWM0_3_CMPA_R = (5000-65) - 1;
+
+    /*
     int i = 0;
     for(i = 0; i < 100; i++)
     {
@@ -48,6 +87,7 @@ void rightPosition(void)
     GPIO_PORTC_DATA_R &= ~0x10;
     Timer1_Delay_MicroSecond(19740); //Finish Period of 20ms
     }
+    */
 }
 
 void Timer1_Delay_MicroSecond(int ttime)
