@@ -5,7 +5,7 @@
 
 void DC_Motor_Init(void)
 {
-    //Port D Initialization Motor 1 (Front Left wheel)
+    //Port D Initialization Motor 1 (Front Left wheels)
     SYSCTL_RCGCGPIO_R |= 0x08;       // Enable Port D
     GPIO_PORTD_DIR_R |= 0x0C;   // Set PD2 and PD3 as output
     GPIO_PORTD_DEN_R |= 0x0C;   // Enable Digital for PD2 and PD3
@@ -28,33 +28,47 @@ void DC_Motor_Init(void)
     */
 
 
-    //Port F Initialization for PWM
 
-    /*//PWM Initialization
-    SYSCTL_RCGC0_R |= SYSCTL_RCGC0_PWM0;
-    SYSCTL_RCGC2_R |= SYSCTL_RCGC2_GPIOD;
-    SYSCTL_RCGCPWM_R |= 0x01;
+    //PWM Initialization
+    SYSCTL_RCGCPWM_R |= SYSCTL_RCGCPWM_R0;  // Enable Clock for PWM0
+    GPIO_PORTD_DIR_R |= 0x03;               // Set PD0 and PD1 as output
+    GPIO_PORTD_DEN_R |= 0x03;               // Enable Digital for PD0 and PD1
 
-    SYSCTL_RCC_R &= ~(0x7 << 17);
-    SYSCTL_RCC_R |= SYSCTL_RCC_USEPWMDIV;
-    SYSCTL_RCC_R |= SYSCTL_RCC_PWMDIV_64;
+    GPIO_PORTD_AFSEL_R |= 0x03; // Alternate Functions for PD0 and PD1
+    GPIO_PORTD_PCTL_R |= 0x44;
 
-    GPIO_PORTD_AFSEL_R |= 0x03;  // Enable alternate function on PD0 and PD1
-    GPIO_PORTD_PCTL_R &= ~0xFF;  // Clear PCTL for PD0 and PD1
-    GPIO_PORTD_PCTL_R |= 0x44;   // Set PD0 and PD1 as PWM output
-    GPIO_PORTD_DEN_R |= 0x03;    // Enable digital functionality for PD0 and PD1
+    //Disable Generators
+    PWM0_ENABLE_R &= ~0x03;
+    PWM0_0_CTL_R = 0;
+    PWM0_2_CTL_R = 0;
 
-    // Disable PWM0 generator 3
-    PWM0_ENABLE_R |= ~0xC0;
-    PWM0_3_CTL_R = 0;
+    //Down Count for Generator 0
+    PWM0_0_CTL_R &= ~0x03;
+    PWM0_0_GENA_R = 0x8C;
+    PWM0_0_GENB_R = 0;
 
-    PWM0_3_GENA_R = 0x0000008C;
-    PWM0_3_GENB_R = 0x0000080C;
-    PWM0_3_LOAD_R = 25000 - 1;
-    PWM0_3_CMPA_R = 25000 - 4;
-    PWM0_3_CMPB_R = 25000 - 4;
-    PWM0_3_CTL_R = 1;
-    PWM0_ENABLE_R |= 0xC0;*/
+    //Down Count for Generator 2
+    PWM0_2_CTL_R &= ~0x03;
+    PWM0_2_GENA_R = 0x8C;
+    PWM0_2_GENB_R = 0;
+
+    // 16,000,000 / 2500
+    //Set PWM load Register for 2.5Khz
+    PWM0_0_LOAD_R = 6400 - 1;
+
+    //Set PWM load Register for 2.5Khz
+    PWM0_2_LOAD_R = 6400 - 1;
+
+    // Duty Cycle, change here (Just need to modify this to change speed)
+    PWM0_0_CMPA_R = 6400 - 1;   // Initial Duty Cycle PWM0 Generator 0
+    PWM0_2_CMPA_R = 6400 - 1;   // Initial Duty Cycle PWM0 Generator 2
+
+    //Enable Generators
+    PWM0_0_CTL_R = 1;
+    PWM0_2_CTL_R = 1;
+
+    //Enable PWM Output for PD0 and PD1
+    PWM0_ENABLE_R |= 0x3;
 }
 
 void Forward(void)
