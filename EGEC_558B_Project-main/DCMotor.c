@@ -31,6 +31,7 @@ void DC_Motor_Init(void)
 
     //PWM Initialization
     SYSCTL_RCGCPWM_R |= SYSCTL_RCGCPWM_R0;  // Enable Clock for PWM0
+    SYSCTL_RCC_R &= ~0x00100000;           // Use System Clock
     GPIO_PORTD_DIR_R |= 0x03;               // Set PD0 and PD1 as output
     GPIO_PORTD_DEN_R |= 0x03;               // Enable Digital for PD0 and PD1
 
