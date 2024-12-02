@@ -40,6 +40,7 @@ void DC_Motor_Init(void)
 
     //Disable Generators
     PWM0_ENABLE_R &= ~0x03;
+    PWM0_CTL_R &= 0;
     PWM0_0_CTL_R = 0;
     PWM0_2_CTL_R = 0;
 
@@ -65,6 +66,7 @@ void DC_Motor_Init(void)
     PWM0_2_CMPA_R = 6400 - 1;   // Initial Duty Cycle PWM0 Generator 2
 
     //Enable Generators
+    PWM0_CTL_R &= 0x5;    // Enables Gen 0 and 2
     PWM0_0_CTL_R = 1;
     PWM0_2_CTL_R = 1;
 
