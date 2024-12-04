@@ -90,14 +90,14 @@ void rightPosition(void)
     */
 }
 
-void Timer1_Delay_MicroSecond(int ttime)
+void Timer1_Delay_MilliSecond(int ttime)
 {
     int i;
     SYSCTL_RCGCTIMER_R |= 2;        // Enable clock to Timer Block 1
     TIMER1_CTL_R = 0;               // Disable Timer1 before initialization
     TIMER1_CFG_R = 0x04;            // Configure for 16-bit mode
     TIMER1_TAMR_R = 0x02;           // Configure for periodic mode and down-counter
-    TIMER1_TAILR_R = 16 - 1; // Load TimerA interval value (16 cycles per microsecond)
+    TIMER1_TAILR_R = 16000 - 1; // Load TimerA interval value (16000 cycles per millisecond)
     TIMER1_ICR_R = 0x1;             // Clear the TimerA timeout flag
     TIMER1_CTL_R |= 0x01;           // Enable Timer1A after initialization
 
