@@ -9,7 +9,7 @@ void middlePosition(void);
 
 void rightPosition(void);
 
-void Timer1_Delay_MilliSecond(int ttime);
+void Timer1_Delay_MicroSecond(int ttime);
 
 
 
