@@ -24,8 +24,8 @@ int main(void)
     DC_Motor_Init();
     Servo_Motor_Init();
 
+    Timer1_Delay_MicroSecond(1000000);                 //Get everything ready for testing
     middlePosition();                               //Default middle position of servo motor
-    Timer1_Delay_MilliSecond(5000);                 //Get everything ready for testing
 
 
 
@@ -37,12 +37,15 @@ int main(void)
         {
             Stop();
             rightPosition();                        //Move servo to right position to scan
-            Timer1_Delay_MilliSecond(50);
+            Timer1_Delay_MicroSecond(1000000);      //Give time for Sensor to scan
             if(distance > .3)
             {
+                Timer1_Delay_MicroSecond(500000);
                 Turn_Right();                       //Right side scanned and there's room to travel
-                Timer1_Delay_MilliSecond(500);      //Helps so car can turn right properly
-                Stop()    ;                         //Stops the turning
+                Timer1_Delay_MicroSecond(500000);
+                Timer1_Delay_MicroSecond(500000);
+                Timer1_Delay_MicroSecond(500000);   //Delaying so it could turn right about 90 degrees
+                Stop();                             //Stops the turning
                 middlePosition();                   //Centers the servo motor so the sensor is in the middle position again
                 Forward();                          //Start Driving since path is clear after it turned right
             }
@@ -50,11 +53,14 @@ int main(void)
             {
                 Stop();
                 leftPosition();                     //Too close to the object on the right, now scanning left
-                Timer1_Delay_MilliSecond(50);
+                Timer1_Delay_MicroSecond(1000000);      //Give time for Sensor to scan
                 if(distance > .3)
                 {
+                    Timer1_Delay_MicroSecond(500000);
                     Turn_Left();                    //Left side scanned, there's room to travel
-                    Timer1_Delay_MilliSecond(500);  //Helps so far can turn left properly
+                    Timer1_Delay_MicroSecond(500000);
+                    Timer1_Delay_MicroSecond(500000);
+                    Timer1_Delay_MicroSecond(500000);//Delaying so it can turn left
                     Stop();                         //Stops the turning
                     middlePosition();               //Centers the servo motor so the sensor is in the middle position again
                     Forward();                      //Start Driving since the path is clear after it turned left
@@ -63,13 +69,25 @@ int main(void)
                 {
                     middlePosition();               //No path is clear in front, center the servo motor
                     Reverse();                      //Reverse to find a different route
-                    Timer1_Delay_MilliSecond(2000); //Drives backwards for about 2 seconds
+                    Timer1_Delay_MicroSecond(500000);
+                    Timer1_Delay_MicroSecond(500000);
+                    Timer1_Delay_MicroSecond(500000);
                     Stop();
                     int r = rand() % 20;            //Generate random number from 0-19 to pick which way to turn
                     if (r >= 10)
+                    {
                         Turn_Right();               //Greater than or equal to 10, turn right
+                        Timer1_Delay_MicroSecond(500000);
+                        Timer1_Delay_MicroSecond(500000);
+                        Timer1_Delay_MicroSecond(500000);
+                    }
                     else
+                    {
                         Turn_Left();                //Less than 10, turn left
+                        Timer1_Delay_MicroSecond(500000);
+                        Timer1_Delay_MicroSecond(500000);
+                        Timer1_Delay_MicroSecond(500000);
+                    }
 
                 }
             }
