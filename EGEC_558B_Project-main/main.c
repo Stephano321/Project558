@@ -27,33 +27,7 @@ int main(void)
     Timer1_Delay_MicroSecond(1000000);                 //Get everything ready for testing
     middlePosition();                               //Default middle position of servo motor
 
-
-    while(1){
-        if(distance > .3)
-            Forward();
-        else 
-        {
-            Stop();
-            int r = rand() % 20;            //Generate random number from 0-19 to pick which way to turn
-            Timer1_Delay_MicroSecond(500000);
-            if (r >= 10)
-                {
-                    Turn_Right();               //Greater than or equal to 10, turn right
-                    Timer1_Delay_MicroSecond(500000);
-                    Timer1_Delay_MicroSecond(500000);
-                    Timer1_Delay_MicroSecond(500000);
-                }
-            else
-                {
-                    Turn_Left();                //Less than 10, turn left
-                    Timer1_Delay_MicroSecond(500000);
-                    Timer1_Delay_MicroSecond(500000);
-                    Timer1_Delay_MicroSecond(500000);
-                }
-        }
-    }
-}
-    /*
+    //Used during Live Demo
     while(1){
         if(distance > .3)
             Forward();                              //Nothing close so go forward
@@ -116,7 +90,38 @@ int main(void)
                 }
             }
         }
-    }*/
+    }
+    
+/*
+    while(1){
+        if(distance > .3)
+            Forward();
+        else 
+        {
+            Stop();
+            int r = rand() % 20;            //Generate random number from 0-19 to pick which way to turn
+            Timer1_Delay_MicroSecond(500000);
+            if (r >= 10)
+                {
+                    Turn_Right();               //Greater than or equal to 10, turn right
+                    Timer1_Delay_MicroSecond(500000);
+                    Timer1_Delay_MicroSecond(500000);
+                    Timer1_Delay_MicroSecond(500000);
+                }
+            else
+                {
+                    Turn_Left();                //Less than 10, turn left
+                    Timer1_Delay_MicroSecond(500000);
+                    Timer1_Delay_MicroSecond(500000);
+                    Timer1_Delay_MicroSecond(500000);
+                }
+        }
+    }
+}*/
+    
+
+}
+
 
 
 
